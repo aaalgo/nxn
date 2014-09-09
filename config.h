@@ -1,0 +1,26 @@
+#define MAX_NODE        70
+#define MAX_PART        5000
+#define MAX_DATASET     10
+#define MAX_ROOT        4
+#define MAX_DISK        4
+#define MAX_EVENT       1
+#define MAX_BLOCK_SIZE  0x1000000
+#define STR_SIZE        1000
+#define BACKLOG         10
+#define MAX_HOST_NAME   64  
+#define MAX_ARGC        100
+#define BUFSIZE         1000
+#define MAX_NODE_PART   1000
+#define MAX_READER      4
+#define REPORT_PERIOD   500000
+#define MAX_SCATTER     128         // single item from one node
+#define MY_EPOCH        1300929315
+#define WRITE_DEPTH     20
+#define SEND_DEPTH      10
+#define SLEEP_TIME      10000
+#define ZIP_DEPTH       100
+#define MAX_ZIPPER      8
+#define MAX_WORKER      8
+#define IN_LOCKS        20
+#define OUT_LOCKS       20
+#define WORKER_DEPTH    20

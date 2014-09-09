@@ -1,0 +1,85 @@
+Files
+
+1. ORIG	<Feature>
+2. KNN <KNN> 
+3. RNN <NN>
+4. FEAT <Feature> neighbors' features
+5. CANDY <NN>
+6. UPDATE <NN>	(add/remove)
+
+Logical view.
+
+Each point maintains:
+	r = distance to current K-NN
+	N = {<id, r, dist, flag, feature>} A list of K-NN		r is estimation of id's NN distance
+	R = {<id, r, dist, flag, feature>} A list of reverse K-NN	
+
+Iteration
+  State 1:  Join.
+	Input: KNN RNN FEAT UPDATE
+	Output: CANDY (new)
+		RNN (local overwrite)
+		FEAT (local overwrite)
+
+	For every point P
+	Does sampling and generate a number of pairs to be compared
+	For every such pair A, B
+		
+		d <- d(A.feature, B.feature)
+	
+		if (d < r(A)) {		// B is potentially a better NN for A
+			<B, d> --> A
+		} // and do the same for B
+
+  State 2:  Rank.
+	Input: ORIG KNN CANDY FEAT
+	Output: KNN (local overwrite)
+		UPDATE (new)
+		FEAT (append)	// sample, for newly added K-NN
+
+	For every point P
+	Accumulated a number of messages of potential better NN:
+		{<A, d>}
+
+	Merge the messages with current K-NN
+
+	Generate a list of
+		added   : items newly added to K-NN list
+		evicted : items evicted from K-NN list
+
+	for each A in added:
+		<added, P, r(P), feature> --> A		// with feature, reverse
+
+	for each A in evicted:
+		<evicted, P> --> A
+
+  Stage 3:  Reverse.
+	Input:	ORIG UPDATE
+	Output: FEAT (append)
+
+	For every point P
+	Accumulated a number of messages with regard to reverse K-NN, either added or evicted
+	For all added R-NN A
+		<P, feature> --> A
+	Update R-NN list
+
+	Stage 3 do not have to write things out to disk.  Directly combined with Stage 1.
+
+Cost
+1. small: computation
+2. messages in Stage 2, also small
+3. messages in Stage 1, big
+
+Pruning:
+	1. run testing on m(p).
+	2. merge before sending out
+
+4. local join, BIG
+
+
+Memory cost
+
+1TB / 100 = 10GB data
+
+Bootstrap with sketch
+
